@@ -1,12 +1,18 @@
-// how about trying to use the vanilla JSON:API objects?
-export default interface Message {
-  id: number | null;
-  senderId: number;
-  receiverId: number;
-  senderUsername: string;
-  receiverUsername: string;
-  body: string;
-  createdAt: Date;
-  updatedAt: Date;
-  arrivesAt: Date;
+import User from '@/models/User';
+import store from '@/store';
+import MessageResource from '@/types/MessageResource';
+import UserResource from '@/types/UserResource';
+
+export default class Message {
+  static find(id: string | number): MessageResource | null {
+    return store.state.resources.message[id] || null;
+  }
+
+  static getSender(message: MessageResource): UserResource | null {
+    return User.find(message.relationships.sender.data.id);
+  }
+
+  static getReceiver(message: MessageResource): UserResource | null {
+    return User.find(message.relationships.receiver.data.id);
+  }
 }

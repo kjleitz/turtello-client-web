@@ -1,13 +1,22 @@
 import Message from '@/models/Message';
+import User from '@/models/User';
+import store from '@/store';
+import MessageResource from '@/types/MessageResource';
+import ThreadResource from '@/types/ThreadResource';
+import UserResource from '@/types/UserResource';
 
-interface User { id: number | null }
+export default class Thread {
+  static find(id: string | number): ThreadResource | null {
+    return store.state.resources.messageThread[id] || null;
+  }
 
-// how about trying to use the vanilla JSON:API objects?
-export default interface Thread {
-  id: number | null;
-  slug: string;
-  createdAt: Date;
-  updatedAt: Date;
-  messages: Message[];
-  participants: User[];
+  static getParticipants(thread: ThreadResource): (UserResource | null)[] {
+    const { data } = thread.relationships.participants;
+    return data.map(({ id }) => User.find(id));
+  }
+
+  static getMessages(thread: ThreadResource): (MessageResource | null)[] {
+    const { data } = thread.relationships.messages;
+    return data.map(({ id }) => Message.find(id));
+  }
 }

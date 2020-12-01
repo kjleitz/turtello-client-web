@@ -21,63 +21,50 @@ export interface ErrorLinks {
   about: Link;
 }
 
-export interface ResourceIdentifier<
-  ResourceType extends string = string
-> {
+export interface ResourceIdentifier<Type extends string = string> {
   id: string;
-  type: ResourceType;
+  type: Type;
   meta?: Meta;
 }
 
-export type HasOne<ResourceType extends string = string> = ResourceIdentifier<ResourceType>;
-export type HasMany<ResourceType extends string = string> = ResourceIdentifier<ResourceType>[];
-
-export type RelationshipData = null | ResourceIdentifier | ResourceIdentifier[];
-
-// export interface Relationship {
-//   data: RelationshipData;
-//   links?: Links;
-//   meta?: Meta;
-// }
-
-export interface Relationship {
-  data: null | HasOne | HasMany;
+export interface OptionalHasOneRelationship<Type extends string = string> {
+  data: null | ResourceIdentifier<Type>;
   links?: Links;
   meta?: Meta;
 }
 
-// export type Relationships<
-//   RelationshipTypes extends string = string
-// > = Record<RelationshipTypes, Relationship>;
+export interface HasOneRelationship<Type extends string = string> {
+  data: ResourceIdentifier<Type>;
+  links?: Links;
+  meta?: Meta;
+}
 
-export type RelationshipsMap = Record<string, Relationship>;
+export interface HasManyRelationship<Type extends string = string> {
+  data: ResourceIdentifier<Type>[];
+  links?: Links;
+  meta?: Meta;
+}
 
-// export interface Resource<
-//   Attributes extends Record<string, any> = Record<string, any>,
-//   RelationshipTypes extends string = string
-// > {
-//   id: string;
-//   type: string;
-//   attributes: Attributes;
-//   relationships: Relationships<RelationshipTypes>;
-//   links?: Links;
-// }
+export type Relationship<
+  Type extends string = string
+> = HasOneRelationship<Type> | HasManyRelationship<Type>;
+
+export type Attributes = Record<string, any>;
 
 export interface Resource<
-  Attributes extends Record<string, any> = Record<string, any>,
-  Relationships extends RelationshipsMap = RelationshipsMap
+  T extends string = string,
+  A extends Attributes = Attributes,
+  R = Record<string, Relationship> | undefined
 > {
   id: string;
-  type: string;
-  attributes: Attributes;
-  relationships: Relationships;
+  type: T;
+  attributes: A;
+  relationships: R;
   links?: Links;
 }
 
-export interface CollectionDocument<
-  ResourceItem extends Resource = Resource
-> {
-  data: ResourceItem[];
+export interface CollectionDocument<R = Resource> {
+  data: R[];
   errors: never;
   included?: Resource[];
   links?: Links;
@@ -85,16 +72,16 @@ export interface CollectionDocument<
   meta?: Meta;
 }
 
-export interface ResourceDocument<
-  ResourceItem extends Resource = Resource
-> {
-  data: ResourceItem;
+export interface ResourceDocument<R = Resource> {
+  data: R;
   errors: never;
   included?: Resource[];
   links?: Links;
   jsonapi?: JsonApiInfo;
   meta?: Meta;
 }
+
+export type ResponseDocument<R = Resource> = ResourceDocument<R> | CollectionDocument<R>;
 
 export interface ErrorSource {
   pointer: string;

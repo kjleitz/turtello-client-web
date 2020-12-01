@@ -1,0 +1,54 @@
+$white:    #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black:    #000;
+
+// $blue:    #0482F1;
+// $indigo:  #6321D4;
+// $purple:  #764491;
+// $pink:    #E05578;
+// $red:     #DE2B2B;
+// $orange:  #FF6A19;
+// $yellow:  #FFC600;
+// $green:   #5EA23F;
+// $teal:    #1FC29C;
+// $cyan:    #0DADBF;
+
+$froggo:     #5DAF7B;
+$stormy:     #244966;
+$darkness:   #182D3E;
+$skeyes:     #7BB2D6;
+$old-lav:    #7B596B;
+$xanadu:     #86908A;
+$cat-tail:   #D69F4A;
+$plaster:    #F5F5EF;
+$candy-rasp: #F2453D;
+
+$blue:   $skeyes;
+$cyan:   #0DADBF;
+$green:  $froggo;
+$indigo: $stormy;
+$orange: #FF6A19;
+$pink:   #E05578;
+$purple: #764491;
+$red:    $candy-rasp;
+$teal:   #1FC29C;
+$yellow: $cat-tail;
+
+$primary:      $skeyes;
+$info:         $stormy;
+$success:      $froggo;
+$warning:      $cat-tail;
+$danger:       $candy-rasp;
+$light:        $plaster;
+$light-accent: $xanadu;
+$dark:         $darkness;
+$dark-accent:  $old-lav;
+$secondary:    $xanadu;
