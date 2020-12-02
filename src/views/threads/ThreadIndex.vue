@@ -2,7 +2,7 @@
   <div class="thread-index-view">
     thread message counts:
     <div v-for="thread in threads" :key="thread.id" class="thread">
-      {{ thread.relationships.messages.count }}
+      {{ thread.relationships.messages.data.length }}
     </div>
   </div>
 </template>

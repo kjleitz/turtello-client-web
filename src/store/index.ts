@@ -66,7 +66,16 @@ export default new Vuex.Store({
   mutations: {
     addResource(state, resource: AnyResource): void {
       const { id, type } = resource;
-      state.resources[type][id] = resource;
+      const { resources } = state;
+      const existing = resources[type];
+      state.resources = {
+        ...resources,
+        [type]: {
+          ...existing,
+          [id]: resource,
+        },
+      };
+      // state.resources[type][id] = resource;
     },
 
     setTheme(state, { theme }: { theme: Theme }): void {
