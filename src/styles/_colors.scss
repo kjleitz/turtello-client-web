@@ -21,15 +21,22 @@ $black:    #000;
 // $teal:    #1FC29C;
 // $cyan:    #0DADBF;
 
-$froggo:     #5DAF7B;
+// $froggo:     #5DAF7B;
+$froggo:     #51A46F;
 $stormy:     #244966;
 $darkness:   #182D3E;
-$skeyes:     #7BB2D6;
-$old-lav:    #7B596B;
-$xanadu:     #86908A;
-$cat-tail:   #D69F4A;
+// $skeyes:     #7BB2D6;
+$skeyes:     #63A4CF;
+// $old-lav:    #7B596B;
+$old-lav:    #6A4D5D;
+// $xanadu:     #86908A;
+// $xanadu:     #767F79;
+$xanadu:     #646b66;
+// $cat-tail:   #D69F4A;
+$cat-tail:   #C88A2D;
 $plaster:    #F5F5EF;
-$candy-rasp: #F2453D;
+// $candy-rasp: #F2453D;
+$candy-rasp: #F0372D;
 
 $blue:   $skeyes;
 $cyan:   #0DADBF;
@@ -52,3 +59,14 @@ $light-accent: $xanadu;
 $dark:         $darkness;
 $dark-accent:  $old-lav;
 $secondary:    $xanadu;
+
+$theme-colors: (
+  "primary":    $primary,
+  "secondary":  $secondary,
+  "success":    $success,
+  "info":       $info,
+  "warning":    $warning,
+  "danger":     $danger,
+  "light":      $light,
+  "dark":       $dark
+);

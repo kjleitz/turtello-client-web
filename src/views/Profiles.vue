@@ -1,6 +1,6 @@
 <template>
-  <div class="about-view">
-    about
+  <div class="profiles-view">
+    <router-view></router-view>
   </div>
 </template>
 

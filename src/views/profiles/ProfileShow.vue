@@ -1,6 +1,6 @@
 <template>
-  <div class="about-view">
-    about
+  <div class="profile-show-view">
+    profile show
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
-  <div class="thread-show">
-
+  <div class="thread-show-view">
+    thread show
   </div>
 </template>
 
@@ -8,6 +8,6 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  
+  // ...
 });
 </script>

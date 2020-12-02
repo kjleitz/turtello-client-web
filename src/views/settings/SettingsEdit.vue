@@ -1,6 +1,6 @@
 <template>
-  <div class="about-view">
-    about
+  <div class="settings-edit-view">
+    settings edit
   </div>
 </template>
 

@@ -4,13 +4,15 @@ import Vue from 'vue';
 // Probably don't need all of these, but I'm lazy, so...
 import {
   BootstrapVue,
-  // CardPlugin,
-  // DropdownPlugin,
-  // IconsPlugin,
-  // LayoutPlugin,
-  // ModalPlugin,
+  CardPlugin,
+  CollapsePlugin,
+  DropdownPlugin,
+  IconsPlugin,
+  FormPlugin,
+  LayoutPlugin,
+  ModalPlugin,
   // TablePlugin,
-  // VBScrollspyPlugin,
+  NavbarPlugin,
 } from 'bootstrap-vue';
 
 /**
@@ -30,11 +32,13 @@ import {
 
 export default function initBootstrap(): void {
   Vue.use(BootstrapVue);
-  // Vue.use(CardPlugin);
-  // Vue.use(DropdownPlugin);
-  // Vue.use(IconsPlugin);
-  // Vue.use(LayoutPlugin);
-  // Vue.use(ModalPlugin);
+  Vue.use(CardPlugin);
+  Vue.use(CollapsePlugin);
+  Vue.use(DropdownPlugin);
+  Vue.use(IconsPlugin);
+  Vue.use(FormPlugin);
+  Vue.use(LayoutPlugin);
+  Vue.use(ModalPlugin);
   // Vue.use(TablePlugin);
-  // Vue.use(VBScrollspyPlugin);
+  Vue.use(NavbarPlugin);
 }

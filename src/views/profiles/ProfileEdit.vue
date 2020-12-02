@@ -1,6 +1,6 @@
 <template>
-  <div class="about-view">
-    about
+  <div class="profile-edit-view">
+    profile edit
   </div>
 </template>
 
