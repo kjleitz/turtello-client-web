@@ -1,5 +1,5 @@
 import { toArray } from '@/concerns/utilities';
-import authios from '@/concerns/authios';
+import authios, { refreshAuth } from '@/concerns/authios';
 import MessageResource, { MessageDocument, MessagesDocument } from '@/types/MessageResource';
 import Theme from '@/types/Theme';
 import ThreadResource, { ThreadDocument, ThreadsDocument } from '@/types/ThreadResource';
@@ -7,14 +7,6 @@ import UserBuddyResource, { UserBuddiesDocument, UserBuddyDocument } from '@/typ
 import UserResource, { UserDocument, UsersDocument } from '@/types/UserResource';
 import Vue from 'vue';
 import Vuex from 'vuex';
-
-// TODO: remove
-// TODO: remove
-// TODO: remove
-// TODO: remove
-// TODO: remove
-// TODO: remove
-console.log(authios);
 
 Vue.use(Vuex);
 
@@ -53,6 +45,7 @@ const dummyUser = (): UserResource => ({
 
 export default new Vuex.Store({
   state: {
+    authChecked: false,
     user: dummyUser(),
     resources: {
       message: {} as { [id: string]: MessageResource },
@@ -85,6 +78,10 @@ export default new Vuex.Store({
     setUser(state, user: UserResource): void {
       state.user = user;
     },
+
+    setAuthChecked(state, { checked }: { checked: boolean }): void {
+      state.authChecked = checked;
+    },
   },
 
   actions: {
@@ -110,6 +107,10 @@ export default new Vuex.Store({
 
     setUser({ commit }, user: UserResource): void {
       commit('setUser', user);
+    },
+
+    setAuthChecked({ commit }, { checked }: { checked: boolean }): void {
+      commit('setAuthChecked', { checked });
     },
 
     // fetchRelationships({ commit }, resource: AnyResource): Promise<void> {
@@ -182,6 +183,20 @@ export default new Vuex.Store({
         const userResource = userDocument.data;
         commit('setUser', userResource);
         return dispatch('addResourcesFromDocument', userDocument);
+      });
+    },
+
+    checkAuth({ commit }): Promise<void> {
+      return refreshAuth().then((response) => {
+        const userDocument = response.data;
+        const userResource = userDocument.data;
+        commit('setUser', userResource);
+      }).catch((error) => {
+        const code: string = error.response?.data?.error?.code || '';
+        const expectedError = ['auth_token_invalid', 'refresh_token_invalid'].includes(code);
+        return expectedError ? Promise.resolve() : Promise.reject(error);
+      }).finally(() => {
+        commit('setAuthChecked', { checked: true });
       });
     },
   },

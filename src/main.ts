@@ -8,8 +8,10 @@ initBootstrap();
 
 Vue.config.productionTip = false;
 
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app');
+store.dispatch('checkAuth').then(() => {
+  new Vue({
+    router,
+    store,
+    render: h => h(App),
+  }).$mount('#app');
+});

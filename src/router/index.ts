@@ -61,7 +61,7 @@ const routes: RouteConfig[] = [
         },
       },
       {
-        path: '/:id',
+        path: '/:username',
         name: 'ProfileShow',
         component: () => import(/* webpackChunkName: "profile_show" */ '@/views/profiles/ProfileShow.vue'),
         meta: {
