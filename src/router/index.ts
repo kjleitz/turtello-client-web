@@ -31,7 +31,7 @@ const routes: RouteConfig[] = [
     component: () => import(/* webpackChunkName: "threads" */ '@/views/Threads.vue'),
     children: [
       {
-        path: '/',
+        path: '',
         name: 'ThreadIndex',
         component: () => import(/* webpackChunkName: "thread_index" */ '@/views/threads/ThreadIndex.vue'),
         meta: {
@@ -39,7 +39,7 @@ const routes: RouteConfig[] = [
         },
       },
       {
-        path: '/:id',
+        path: ':id',
         name: 'ThreadShow',
         component: () => import(/* webpackChunkName: "thread_show" */ '@/views/threads/ThreadShow.vue'),
         meta: {
@@ -53,7 +53,7 @@ const routes: RouteConfig[] = [
     component: () => import(/* webpackChunkName: "profiles" */ '@/views/Profiles.vue'),
     children: [
       {
-        path: '/',
+        path: '',
         name: 'ProfileEdit',
         component: () => import(/* webpackChunkName: "profile_edit" */ '@/views/profiles/ProfileEdit.vue'),
         meta: {
@@ -61,7 +61,7 @@ const routes: RouteConfig[] = [
         },
       },
       {
-        path: '/:username',
+        path: ':username',
         name: 'ProfileShow',
         component: () => import(/* webpackChunkName: "profile_show" */ '@/views/profiles/ProfileShow.vue'),
         meta: {
@@ -75,7 +75,7 @@ const routes: RouteConfig[] = [
     component: () => import(/* webpackChunkName: "settings" */ '@/views/Settings.vue'),
     children: [
       {
-        path: '/',
+        path: '',
         name: 'SettingsEdit',
         component: () => import(/* webpackChunkName: "settings_edit" */ '@/views/settings/SettingsEdit.vue'),
         meta: {
