@@ -1,11 +1,13 @@
 import { UserDocument } from '@/types/UserResource';
 import axios, { AxiosError, AxiosPromise } from 'axios';
 
-axios.defaults.baseURL = 'https://api.turtello.com/';
+const baseURL = process.env.NODE_ENV === 'production' ? 'https://api.turtello.com/' : '/';
+
+axios.defaults.baseURL = baseURL;
 axios.defaults.withCredentials = true;
 
 const authios = axios.create({
-  baseURL: 'https://api.turtello.com/',
+  baseURL,
   withCredentials: true,
 });
 

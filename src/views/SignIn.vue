@@ -5,6 +5,7 @@
       <b-form-input
         v-model="username"
         :disabled="submitting"
+        autocomplete="username"
         placeholder="username"
         class="mb-2"
         required
@@ -16,6 +17,7 @@
         v-model="password"
         :disabled="submitting"
         type="password"
+        autocomplete="current-password"
         placeholder="password"
         class="mb-2"
         required
@@ -38,6 +40,7 @@
       <b-form-input
         v-model="username"
         :disabled="submitting"
+        autocomplete="username"
         placeholder="username"
         class="mb-2"
         required
@@ -48,6 +51,7 @@
         v-model="password"
         :disabled="submitting"
         type="password"
+        autocomplete="new-password"
         placeholder="password"
         required
         class="mb-2"

@@ -20,19 +20,21 @@
           <b-nav-item :to="{ name: 'Help' }" :active="$route.name === 'Help'">
             help
           </b-nav-item>
+        </template>
 
-          <b-nav-item-dropdown right>
-            <template v-slot:button-content>
-              {{ theme }} mode
-            </template>
-            <b-dropdown-item :active="theme === 'dark'" @click.prevent="setTheme('dark')">
-              dark
-            </b-dropdown-item>
-            <b-dropdown-item :active="theme === 'light'" @click.prevent="setTheme('light')">
-              light
-            </b-dropdown-item>
-          </b-nav-item-dropdown>
+        <b-nav-item-dropdown right>
+          <template v-slot:button-content>
+            {{ theme }} mode
+          </template>
+          <b-dropdown-item :active="theme === 'dark'" @click.prevent="setTheme('dark')">
+            dark
+          </b-dropdown-item>
+          <b-dropdown-item :active="theme === 'light'" @click.prevent="setTheme('light')">
+            light
+          </b-dropdown-item>
+        </b-nav-item-dropdown>
 
+        <template v-if="signedIn">
           <b-nav-item-dropdown right>
             <template v-slot:button-content>
               <em>{{ username }}</em>
@@ -114,6 +116,12 @@ export default Vue.extend({
 
     setTheme(theme: Theme): void {
       store.dispatch('setTheme', { theme });
+    },
+
+    signOut(): Promise<void> {
+      return store.dispatch('signOut').then(() => {
+        if (this.$route.name !== 'Home') this.$router.push({ name: 'Home' });
+      });
     },
   },
 });

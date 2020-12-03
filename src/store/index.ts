@@ -24,6 +24,18 @@ type AnyDocument = MessageDocument
   | UserBuddyDocument
   | UserBuddiesDocument;
 
+interface RootState {
+  authChecked: boolean,
+  user: UserResource;
+  resources: {
+    message: { [id: string]: MessageResource };
+    messageThread: { [id: string]: ThreadResource };
+    user: { [id: string]: UserResource };
+    userBuddy: { [id: string]: UserBuddyResource };
+  };
+  theme: Theme;
+}
+
 const dummyUser = (): UserResource => ({
   id: '0',
   type: 'user',
@@ -43,20 +55,28 @@ const dummyUser = (): UserResource => ({
   },
 });
 
+const freshState = (): Omit<RootState, 'theme'> => ({
+  authChecked: false,
+  user: dummyUser(),
+  resources: {
+    message: {} as { [id: string]: MessageResource },
+    messageThread: {} as { [id: string]: ThreadResource },
+    user: {} as { [id: string]: UserResource },
+    userBuddy: {} as { [id: string]: UserBuddyResource },
+  },
+});
+
 export default new Vuex.Store({
   state: {
-    authChecked: false,
-    user: dummyUser(),
-    resources: {
-      message: {} as { [id: string]: MessageResource },
-      messageThread: {} as { [id: string]: ThreadResource },
-      user: {} as { [id: string]: UserResource },
-      userBuddy: {} as { [id: string]: UserBuddyResource },
-    },
+    ...freshState(),
     theme: Theme.LIGHT,
   },
 
   mutations: {
+    resetState(state): void {
+      Object.assign(state, freshState());
+    },
+
     addResource(state, resource: AnyResource): void {
       const { id, type } = resource;
       const { resources } = state;
@@ -186,6 +206,12 @@ export default new Vuex.Store({
       });
     },
 
+    signOut({ commit }): Promise<void> {
+      return authios.delete<UserDocument>('/sign_out').then(() => {
+        commit('resetState');
+      });
+    },
+
     checkAuth({ commit }): Promise<void> {
       return refreshAuth().then((response) => {
         const userDocument = response.data;
@@ -194,7 +220,7 @@ export default new Vuex.Store({
       }).catch((error) => {
         const code: string = error.response?.data?.error?.code || '';
         const expectedError = ['auth_token_invalid', 'refresh_token_invalid'].includes(code);
-        return expectedError ? Promise.resolve() : Promise.reject(error);
+        if (!expectedError) console.error(error);
       }).finally(() => {
         commit('setAuthChecked', { checked: true });
       });

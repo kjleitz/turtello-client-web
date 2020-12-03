@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "deploy": "yarn build && aws --profile turtello-deployer s3 sync ./dist s3://turtello --delete",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
