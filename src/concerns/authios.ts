@@ -1,7 +1,13 @@
 import { UserDocument } from '@/types/UserResource';
 import axios, { AxiosError, AxiosPromise } from 'axios';
 
-const authios = axios.create();
+axios.defaults.baseURL = 'https://api.turtello.com/';
+axios.defaults.withCredentials = true;
+
+const authios = axios.create({
+  baseURL: 'https://api.turtello.com/',
+  withCredentials: true,
+});
 
 authios.interceptors.response.use((response) => {
   const { authorization } = response.headers;
