@@ -12,8 +12,11 @@ const authios = axios.create({
 });
 
 authios.interceptors.response.use((response) => {
-  const { authorization } = response.headers;
-  if (authorization) authios.defaults.headers.common.Authorization = authorization;
+  const { Authorization } = response.headers;
+  if (Authorization) {
+    authios.defaults.headers.common.Authorization = Authorization;
+    axios.defaults.headers.common.Authorization = Authorization;
+  }
   return response;
 }, (error) => {
   // We're looking for the error code "auth_token_invalid" from the server; that
@@ -33,17 +36,18 @@ authios.interceptors.response.use((response) => {
   // this time around and it'll bail right away. If we're able to refresh the
   // token, we'll just retry the request with the same config that was initially
   // used!
-  return refreshAuth().then(() => authios(axiosError.config)); // eslint-disable-line @typescript-eslint/no-use-before-define
+  return refreshAuth().then(() => axios(axiosError.config)); // eslint-disable-line @typescript-eslint/no-use-before-define
 });
 
 export function refreshAuth(): AxiosPromise<UserDocument> {
   return axios.post<UserDocument>('/auth/refresh').then((response) => {
     // Grab the token off of the "Authorization" header of the response...
-    const { authorization } = response.headers;
-    if (!authorization) throw new Error('No auth token present in refresh response');
+    const { Authorization } = response.headers;
+    if (!Authorization) throw new Error('No auth token present in refresh response');
     // ...then set the default "Authorization" header to the received token for
     // future requests.
-    authios.defaults.headers.common.Authorization = authorization;
+    authios.defaults.headers.common.Authorization = Authorization;
+    axios.defaults.headers.common.Authorization = Authorization;
     return response;
   });
 }
