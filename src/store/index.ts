@@ -25,7 +25,7 @@ type AnyDocument = MessageDocument
   | UserBuddiesDocument;
 
 interface RootState {
-  authChecked: boolean,
+  authChecked: boolean;
   user: UserResource;
   resources: {
     message: { [id: string]: MessageResource };
