@@ -12,10 +12,10 @@ const authios = axios.create({
 });
 
 authios.interceptors.response.use((response) => {
-  const { Authorization } = response.headers;
-  if (Authorization) {
-    authios.defaults.headers.common.Authorization = Authorization;
-    axios.defaults.headers.common.Authorization = Authorization;
+  const { authorization } = response.headers;
+  if (authorization) {
+    authios.defaults.headers.common.Authorization = authorization;
+    axios.defaults.headers.common.Authorization = authorization;
   }
   return response;
 }, (error) => {
@@ -42,12 +42,12 @@ authios.interceptors.response.use((response) => {
 export function refreshAuth(): AxiosPromise<UserDocument> {
   return axios.post<UserDocument>('/auth/refresh').then((response) => {
     // Grab the token off of the "Authorization" header of the response...
-    const { Authorization } = response.headers;
-    if (!Authorization) throw new Error('No auth token present in refresh response');
+    const { authorization } = response.headers;
+    if (!authorization) throw new Error('No auth token present in refresh response');
     // ...then set the default "Authorization" header to the received token for
     // future requests.
-    authios.defaults.headers.common.Authorization = Authorization;
-    axios.defaults.headers.common.Authorization = Authorization;
+    authios.defaults.headers.common.Authorization = authorization;
+    axios.defaults.headers.common.Authorization = authorization;
     return response;
   });
 }
