@@ -7,6 +7,8 @@ import UserBuddyResource, { UserBuddiesDocument, UserBuddyDocument } from '@/typ
 import UserResource, { UserDocument, UsersDocument } from '@/types/UserResource';
 import Vue from 'vue';
 import Vuex from 'vuex';
+// import VuexPersistence, { AsyncStorage } from 'vuex-persist';
+// import localforage from 'localforage';
 
 Vue.use(Vuex);
 
@@ -66,7 +68,16 @@ const freshState = (): Omit<RootState, 'theme'> => ({
   },
 });
 
+// const vuexLocal = new VuexPersistence<RootState>({
+//   storage: localforage as AsyncStorage,
+//   asyncStorage: true,
+// });
+
 export default new Vuex.Store({
+  // plugins: [
+  //   vuexLocal.plugin,
+  // ],
+
   state: {
     ...freshState(),
     theme: Theme.LIGHT,
