@@ -1,50 +1,9 @@
 <template>
   <div class="thread-index-view">
-    thread message counts:
-    <div v-for="thread in threads" :key="thread.id" class="thread">
-      {{ thread.relationships.messages.data.length }}
-    </div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
-    <div class="foobar">hi</div>
+    <ThreadList
+      :threads="threads"
+      class="thread-list"
+    />
   </div>
 </template>
 
@@ -52,8 +11,13 @@
 import store from '@/store';
 import ThreadResource from '@/types/ThreadResource';
 import Vue from 'vue';
+import ThreadList from '@/components/threads/ThreadList.vue';
 
 export default Vue.extend({
+  components: {
+    ThreadList,
+  },
+
   computed: {
     threads(): ThreadResource[] {
       return store.getters.threads;
@@ -61,18 +25,19 @@ export default Vue.extend({
   },
 
   beforeRouteUpdate(_to, _from, next): void {
-    this.fetchThreads().then(() => { next() });
+    store.dispatch('fetchThreads').then(() => { next() });
   },
 
   created(): void {
-    this.fetchThreads();
-  },
-
-  methods: {
-    fetchThreads(): Promise<void> {
-      const userId = store.state.user.id;
-      return store.dispatch('fetchThreads', { userId });
-    },
+    store.dispatch('fetchThreads');
   },
 });
 </script>
+
+<style lang="scss">
+.thread-index-view {
+  .thread-list {
+    width: 100%;
+  }
+}
+</style>

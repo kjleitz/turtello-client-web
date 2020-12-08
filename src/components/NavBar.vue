@@ -1,6 +1,16 @@
 <template>
-  <b-navbar :class="['nav-bar', { shrink }]" id="nav-bar" sticky toggleable="md" type="dark" variant="success">
-    <b-navbar-brand to="/">turtello</b-navbar-brand>
+  <b-navbar
+    id="nav-bar"
+    :class="['nav-bar', { shrink }]"
+    sticky
+    toggleable="md"
+    type="dark"
+    variant="info"
+  >
+    <b-navbar-brand :to="titleRoute">
+      <b-icon-arrow-left v-if="showBackButton"/>
+      {{ title }}
+    </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -77,6 +87,8 @@
 import Vue from 'vue';
 import store from '@/store';
 import Theme from '@/types/Theme';
+import { threadTitleFor } from '@/concerns/threadUtils';
+import { RawLocation } from 'vue-router';
 
 export default Vue.extend({
   name: 'NavBar',
@@ -106,6 +118,24 @@ export default Vue.extend({
 
     theme(): Theme {
       return store.state.theme;
+    },
+
+    title(): string {
+      switch (this.$route.name) {
+        case 'ThreadShow': return threadTitleFor(store.state.thread);
+        default: return 'turtello';
+      }
+    },
+
+    titleRoute(): RawLocation {
+      switch (this.$route.name) {
+        case 'ThreadShow': return { name: 'ThreadIndex' };
+        default: return '/';
+      }
+    },
+
+    showBackButton(): boolean {
+      return this.titleRoute !== '/';
     },
   },
 

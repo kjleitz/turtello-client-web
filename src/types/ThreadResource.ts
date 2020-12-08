@@ -2,14 +2,16 @@ import { CollectionDocument, HasManyRelationship, Resource, ResourceDocument } f
 
 export interface ThreadAttributes {
   slug: string;
-  createdAt: Date;
-  updatedAt: Date;
+  participantUsernames: string[];
+  latestMessageBody: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface ThreadRelationships {
+export type ThreadRelationships = {
   messages: HasManyRelationship<'message'>;
   participants: HasManyRelationship<'user'>;
-}
+};
 
 type ThreadResource = Resource<'messageThread', ThreadAttributes, ThreadRelationships>;
 export default ThreadResource;

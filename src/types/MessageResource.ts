@@ -6,15 +6,15 @@ export interface MessageAttributes {
   senderUsername: string;
   receiverUsername: string;
   body: string;
-  createdAt: Date;
-  updatedAt: Date;
-  arrivesAt: Date;
+  createdAt: string;
+  updatedAt: string;
+  arrivesAt: string;
 }
 
-export interface MessageRelationships {
+export type MessageRelationships = {
   sender: HasOneRelationship<'user'>;
   receiver: HasOneRelationship<'user'>;
-}
+};
 
 type MessageResource = Resource<'message', MessageAttributes, MessageRelationships>;
 export default MessageResource;

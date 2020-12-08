@@ -7,6 +7,9 @@ import UserBuddyResource, { UserBuddiesDocument, UserBuddyDocument } from '@/typ
 import UserResource, { UserDocument, UsersDocument } from '@/types/UserResource';
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { Resource } from '@/types/JsonApi';
+import _ from 'underscore';
+// import qs from 'qs';
 // import VuexPersistence, { AsyncStorage } from 'vuex-persist';
 // import localforage from 'localforage';
 
@@ -26,9 +29,12 @@ type AnyDocument = MessageDocument
   | UserBuddyDocument
   | UserBuddiesDocument;
 
+type AnyResourceType = AnyResource['type'];
+
 interface RootState {
   authChecked: boolean;
   user: UserResource;
+  thread: ThreadResource;
   resources: {
     message: { [id: string]: MessageResource };
     messageThread: { [id: string]: ThreadResource };
@@ -44,8 +50,8 @@ const dummyUser = (): UserResource => ({
   attributes: {
     username: '[logged out]',
     role: 'peasant',
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toJSON(),
+    updatedAt: new Date().toJSON(),
   },
   relationships: {
     userBuddies: {
@@ -57,9 +63,30 @@ const dummyUser = (): UserResource => ({
   },
 });
 
+const dummyThread = (): ThreadResource => ({
+  id: '0',
+  type: 'messageThread',
+  attributes: {
+    slug: '',
+    participantUsernames: [],
+    latestMessageBody: '',
+    createdAt: new Date().toJSON(),
+    updatedAt: new Date().toJSON(),
+  },
+  relationships: {
+    messages: {
+      data: [],
+    },
+    participants: {
+      data: [],
+    },
+  },
+});
+
 const freshState = (): Omit<RootState, 'theme'> => ({
   authChecked: false,
   user: dummyUser(),
+  thread: dummyThread(),
   resources: {
     message: {} as { [id: string]: MessageResource },
     messageThread: {} as { [id: string]: ThreadResource },
@@ -110,6 +137,10 @@ export default new Vuex.Store({
       state.user = user;
     },
 
+    setThread(state, thread: ThreadResource): void {
+      state.thread = thread;
+    },
+
     setAuthChecked(state, { checked }: { checked: boolean }): void {
       state.authChecked = checked;
     },
@@ -140,6 +171,10 @@ export default new Vuex.Store({
       commit('setUser', user);
     },
 
+    setThread({ commit }, thread: ThreadResource): void {
+      commit('setThread', thread);
+    },
+
     setAuthChecked({ commit }, { checked }: { checked: boolean }): void {
       commit('setAuthChecked', { checked });
     },
@@ -151,50 +186,62 @@ export default new Vuex.Store({
     //   relationshipThings.forEach
     // },
 
-    fetchMessages({ dispatch }): Promise<void> {
-      return authios.get<MessagesDocument>('/messages').then(({ data }) => {
+    fetchMessages({ dispatch }, params: { ids?: (string | number)[]; include?: string[] } = {}): Promise<void> {
+      return authios.get<MessagesDocument>('/messages', { params }).then(({ data }) => {
         return dispatch('addResourcesFromDocument', data);
       });
     },
 
-    fetchMessage({ dispatch }, { id }: { id: number | string }): Promise<void> {
-      return authios.get<MessageDocument>(`/messages/${id}`).then(({ data }) => {
+    fetchMessage({ dispatch }, { id, include }: { id: number | string; include?: string[] }): Promise<void> {
+      return authios.get<MessageDocument>(`/messages/${id}`, { params: { include } }).then(({ data }) => {
         return dispatch('addResourcesFromDocument', data);
       });
     },
 
-    fetchThreads({ dispatch }, { userId }: { userId: number | string }): Promise<void> {
-      return authios.get<ThreadsDocument>(`/users/${userId}/message_threads`).then(({ data }) => {
+    fetchThreads({ dispatch }, params: { ids?: (string | number)[]; include?: string[] } = {}): Promise<void> {
+      return authios.get<ThreadsDocument>(`/message_threads`, { params }).then(({ data }) => {
         return dispatch('addResourcesFromDocument', data);
       });
     },
 
-    fetchThread({ dispatch }, { userId, buddyId }: { userId: number | string; buddyId: number | string }): Promise<void> {
-      return authios.get<ThreadDocument>(`/users/${userId}/message_threads/${buddyId}`).then(({ data }) => {
+    fetchThreadsForUser({ dispatch }, { userId, include }: { userId: number | string; include?: string[] }): Promise<void> {
+      return authios.get<ThreadsDocument>(`/users/${userId}/message_threads`, { params: { include } }).then(({ data }) => {
         return dispatch('addResourcesFromDocument', data);
       });
     },
 
-    fetchUsers({ dispatch }): Promise<void> {
-      return authios.get<UsersDocument>('/users').then(({ data }) => {
+    fetchThread({ dispatch }, { id, include }: { id: number | string; include?: string[] }): Promise<void> {
+      return authios.get<ThreadDocument>(`/message_threads/${id}`, { params: { include } }).then(({ data }) => {
         return dispatch('addResourcesFromDocument', data);
       });
     },
 
-    fetchUser({ dispatch }, { id }: { id: number | string }): Promise<void> {
-      return authios.get<UserDocument>(`/users/${id}`).then(({ data }) => {
+    fetchThreadForUser({ dispatch }, { userId, buddyId, include }: { userId: number | string; buddyId: number | string; include?: string[] }): Promise<void> {
+      return authios.get<ThreadDocument>(`/users/${userId}/message_threads/${buddyId}`, { params: { include } }).then(({ data }) => {
         return dispatch('addResourcesFromDocument', data);
       });
     },
 
-    fetchUserBuddies({ dispatch }): Promise<void> {
-      return authios.get<UserBuddiesDocument>('/user_buddies').then(({ data }) => {
+    fetchUsers({ dispatch }, params: { ids?: (string | number)[]; include?: string[] } = {}): Promise<void> {
+      return authios.get<UsersDocument>('/users', { params }).then(({ data }) => {
         return dispatch('addResourcesFromDocument', data);
       });
     },
 
-    fetchUserBuddy({ dispatch }, { id }: { id: number | string }): Promise<void> {
-      return authios.get<UserBuddyDocument>(`/user_buddies/${id}`).then(({ data }) => {
+    fetchUser({ dispatch }, { id, include }: { id: number | string; include?: string[] }): Promise<void> {
+      return authios.get<UserDocument>(`/users/${id}`, { params: { include } }).then(({ data }) => {
+        return dispatch('addResourcesFromDocument', data);
+      });
+    },
+
+    fetchUserBuddies({ dispatch }, params: { ids?: (string | number)[]; include?: string[] } = {}): Promise<void> {
+      return authios.get<UserBuddiesDocument>('/user_buddies', { params }).then(({ data }) => {
+        return dispatch('addResourcesFromDocument', data);
+      });
+    },
+
+    fetchUserBuddy({ dispatch }, { id, include }: { id: number | string; include?: string[] }): Promise<void> {
+      return authios.get<UserBuddyDocument>(`/user_buddies/${id}`, { params: { include } }).then(({ data }) => {
         return dispatch('addResourcesFromDocument', data);
       });
     },
@@ -235,6 +282,34 @@ export default new Vuex.Store({
       }).finally(() => {
         commit('setAuthChecked', { checked: true });
       });
+    },
+
+    reifyResource({ state, dispatch }, options: { resource: Resource; useCached: boolean }): Promise<void> {
+      const { useCached } = options;
+      const { relationships } = options.resource;
+
+      const promises = Object.values(relationships || {}).map(({ data }) => {
+        const dataList = Array.isArray(data) ? data : [data];
+
+        const unfetchedList = !useCached ? dataList : dataList.filter(({ type, id }) => {
+          return !state.resources[type as AnyResourceType][id];
+        });
+
+        const representative = unfetchedList[0];
+        if (!representative) return Promise.resolve();
+
+        const type = representative.type as AnyResourceType;
+        const ids = unfetchedList.map(({ id }) => id);
+        switch (type) {
+          case 'message': return dispatch('fetchMessages', { ids });
+          case 'messageThread': return dispatch('fetchThreads', { ids });
+          case 'user': return dispatch('fetchUsers', { ids });
+          case 'userBuddy': return dispatch('fetchUserBuddies', { ids });
+          default: return Promise.resolve();
+        }
+      });
+
+      return Promise.all(promises).then();
     },
   },
 

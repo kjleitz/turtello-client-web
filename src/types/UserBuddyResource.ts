@@ -5,8 +5,8 @@ export interface UserBuddyAttributes {
   buddyId: number; // these should not be stored in attributes; see https://jsonapi.org/format/#document-resource-object-attributes
   userUsername: string;
   buddyUsername: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 type UserBuddyResource = Resource<'userBuddy', UserBuddyAttributes, undefined>;

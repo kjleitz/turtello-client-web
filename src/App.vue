@@ -6,8 +6,12 @@
       @not-implemented="showApologyModal"
     />
 
-    <b-container fluid="md" id="main-container">
-      <router-view @not-implemented="showApologyModal"/>
+    <b-container fluid id="main-container">
+      <b-row no-gutters>
+        <b-col>
+          <router-view @not-implemented="showApologyModal"/>
+        </b-col>
+      </b-row>
     </b-container>
 
     <b-modal id="apology-modal">
@@ -100,9 +104,10 @@ html body {
 //   }
 // }
 
-// #main-container {
-//   margin-top: 5rem;
-// }
+#main-container {
+  padding-left: 0;
+  padding-right: 0;
+}
 
 .rendered-markdown {
   font-size: 14px;

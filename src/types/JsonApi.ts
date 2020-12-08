@@ -21,25 +21,33 @@ export interface ErrorLinks {
   about: Link;
 }
 
-export interface ResourceIdentifier<Type extends string = string> {
+export interface ResourceIdentifier<
+  Type extends string = string
+> {
   id: string;
   type: Type;
   meta?: Meta;
 }
 
-export interface OptionalHasOneRelationship<Type extends string = string> {
+export interface OptionalHasOneRelationship<
+  Type extends string = string
+> {
   data: null | ResourceIdentifier<Type>;
   links?: Links;
   meta?: Meta;
 }
 
-export interface HasOneRelationship<Type extends string = string> {
+export interface HasOneRelationship<
+  Type extends string = string
+> {
   data: ResourceIdentifier<Type>;
   links?: Links;
   meta?: Meta;
 }
 
-export interface HasManyRelationship<Type extends string = string> {
+export interface HasManyRelationship<
+  Type extends string = string
+> {
   data: ResourceIdentifier<Type>[];
   links?: Links;
   meta?: Meta;
@@ -54,7 +62,7 @@ export type Attributes = Record<string, any>;
 export interface Resource<
   T extends string = string,
   A extends Attributes = Attributes,
-  R = Record<string, Relationship> | undefined
+  R extends (Record<string, Relationship> | undefined) = Record<string, Relationship> | undefined
 > {
   id: string;
   type: T;
@@ -63,7 +71,9 @@ export interface Resource<
   links?: Links;
 }
 
-export interface CollectionDocument<R = Resource> {
+export interface CollectionDocument<
+  R extends Resource = Resource
+> {
   data: R[];
   errors: never;
   included?: Resource[];
@@ -72,7 +82,9 @@ export interface CollectionDocument<R = Resource> {
   meta?: Meta;
 }
 
-export interface ResourceDocument<R = Resource> {
+export interface ResourceDocument<
+  R extends Resource = Resource
+> {
   data: R;
   errors: never;
   included?: Resource[];
@@ -81,7 +93,9 @@ export interface ResourceDocument<R = Resource> {
   meta?: Meta;
 }
 
-export type ResponseDocument<R = Resource> = ResourceDocument<R> | CollectionDocument<R>;
+export type ResponseDocument<
+  R extends Resource = Resource
+> = ResourceDocument<R> | CollectionDocument<R>;
 
 export interface ErrorSource {
   pointer: string;
