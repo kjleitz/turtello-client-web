@@ -45,6 +45,16 @@ const routes: RouteConfig[] = [
         meta: {
           requiresAuth: true,
         },
+        children: [
+          {
+            path: 'compose',
+            name: 'ThreadCompose',
+            component: () => import(/* webpackChunkName: "thread_compose" */ '@/views/threads/ThreadCompose.vue'),
+            meta: {
+              requiresAuth: true,
+            },
+          },
+        ],
       },
     ],
   },

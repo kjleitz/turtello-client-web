@@ -6,6 +6,10 @@
       :message="message"
       class="m-2"
     />
+    <ComposeButton v-show="showComposeButton" :to="{ name: 'ThreadCompose' }">
+      Reply
+    </ComposeButton>
+    <router-view></router-view>
   </article>
 </template>
 
@@ -16,10 +20,12 @@ import MessageResource from '@/types/MessageResource';
 import ThreadResource from '@/types/ThreadResource';
 import Vue from 'vue';
 import MessageCard from '@/components/messages/MessageCard.vue';
+import ComposeButton from '@/components/threads/ComposeButton.vue';
 
 export default Vue.extend({
   components: {
     MessageCard,
+    ComposeButton,
   },
 
   beforeRouteUpdate(to, _from, next): void {
@@ -37,6 +43,10 @@ export default Vue.extend({
 
     messages(): MessageResource[] {
       return threadMessagesFor(this.thread);
+    },
+
+    showComposeButton(): boolean {
+      return this.$route.name === 'ThreadShow';
     },
   },
 

@@ -7,6 +7,12 @@
     type="dark"
     variant="info"
   >
+    <!-- <b-navbar-brand>
+      <a href="#" @click.prevent="showBackButton ? goBack() : goHome()">
+        <b-icon-arrow-left v-if="showBackButton"/>
+        {{ title }}
+      </a>
+    </b-navbar-brand> -->
     <b-navbar-brand :to="titleRoute">
       <b-icon-arrow-left v-if="showBackButton"/>
       {{ title }}
@@ -120,22 +126,28 @@ export default Vue.extend({
       return store.state.theme;
     },
 
+    defaultTitle(): string {
+      return 'turtello';
+    },
+
     title(): string {
       switch (this.$route.name) {
         case 'ThreadShow': return threadTitleFor(store.state.thread);
-        default: return 'turtello';
+        case 'ThreadCompose': return 'New message';
+        default: return this.defaultTitle;
       }
     },
 
     titleRoute(): RawLocation {
       switch (this.$route.name) {
         case 'ThreadShow': return { name: 'ThreadIndex' };
+        case 'ThreadCompose': return { name: 'ThreadShow' };
         default: return '/';
       }
     },
 
     showBackButton(): boolean {
-      return this.titleRoute !== '/';
+      return this.title !== this.defaultTitle;
     },
   },
 
